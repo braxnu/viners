@@ -4,18 +4,34 @@ use chrono::{Duration};
 #[derive(Debug)]
 pub struct Product {
     pub name: String,
-
-    // days
     pub lifespan: Duration,
 }
 
+impl Default for Product {
+    fn default() -> Self {
+        Self {
+            name: "Default product name".to_string(),
+            lifespan: Duration::days(1),
+        }
+    }
+}
+
 #[test]
-fn has_props() {
+fn has_name() {
     let p = Product {
         name: String::from("Quinoa seed"),
-        lifespan: Duration::days(80),
+        ..Default::default()
     };
 
     assert_eq!(p.name, "Quinoa seed");
+}
+
+#[test]
+fn has_gametime_lifespan() {
+    let p = Product {
+        lifespan: Duration::days(80),
+        ..Default::default()
+    };
+
     assert_eq!(p.lifespan, Duration::days(80));
 }

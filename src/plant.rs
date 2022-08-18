@@ -13,7 +13,7 @@ pub struct Plant<'a> {
 }
 
 #[test]
-fn has_props() {
+fn has_name() {
     let apple_seed = Product {
         name: String::from("Apple seed"),
         lifespan: Duration::weeks(1),
@@ -25,12 +25,77 @@ fn has_props() {
     };
 
     let p = Plant {
-        name: String::from("Quinoa"),
-        lifespan: Duration::days(80),
+        name: String::from("Apple tree"),
+        lifespan: Duration::days(365 * 25),
         seed: &apple_seed,
         product: &apple_fruit,
     };
 
-    assert_eq!(p.name, "Quinoa");
-    assert_eq!(p.lifespan, Duration::days(80));
+    assert_eq!(p.name, "Apple tree");
+}
+
+#[test]
+fn has_lifespan() {
+    let apple_seed = Product {
+        name: String::from("Apple seed"),
+        lifespan: Duration::weeks(1),
+    };
+
+    let apple_fruit = Product {
+        name: String::from("Apple fruit"),
+        lifespan: Duration::weeks(1),
+    };
+
+    let p = Plant {
+        name: String::from("Apple tree"),
+        lifespan: Duration::days(365 * 25),
+        seed: &apple_seed,
+        product: &apple_fruit,
+    };
+
+    assert_eq!(p.lifespan, Duration::days(365 * 25));
+}
+
+#[test]
+fn has_seed() {
+    let apple_seed = Product {
+        name: String::from("Apple seed"),
+        lifespan: Duration::weeks(1),
+    };
+
+    let apple_fruit = Product {
+        name: String::from("Apple fruit"),
+        lifespan: Duration::weeks(1),
+    };
+
+    let p = Plant {
+        name: String::from("Apple tree"),
+        lifespan: Duration::days(365 * 25),
+        seed: &apple_seed,
+        product: &apple_fruit,
+    };
+
+    assert_eq!(p.seed.name, String::from("Apple seed"));
+}
+
+#[test]
+fn has_product() {
+    let apple_seed = Product {
+        name: String::from("Apple seed"),
+        lifespan: Duration::weeks(1),
+    };
+
+    let apple_fruit = Product {
+        name: String::from("Apple fruit"),
+        lifespan: Duration::weeks(1),
+    };
+
+    let p = Plant {
+        name: String::from("Apple tree"),
+        lifespan: Duration::days(365 * 25),
+        seed: &apple_seed,
+        product: &apple_fruit,
+    };
+
+    assert_eq!(p.product.name, String::from("Apple fruit"));
 }
