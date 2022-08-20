@@ -1,40 +1,91 @@
+#![allow(unused_imports)]
+#![allow(dead_code)]
+#![allow(unused_variables)]
 use chrono::{DateTime, Utc, Duration};
 use std::str::FromStr;
 
-struct GameDate {
+struct GameStartDate {
     // real date of game start
-    real_start: DateTime<Utc>,
+    real: DateTime<Utc>,
 
     // game date of game start
-    game_start: DateTime<Utc>,
-
-    game_speed: f32,
+    game: DateTime<Utc>,
+    speed: f32,
 }
 
-impl GameDate {
-    fn get_game_date(self: &Self, real: DateTime<Utc>) -> DateTime<Utc> {
-        let seconds_passed =
-            (real - self.real_start).num_seconds();
+pub fn utc_from_str(date: &str) -> DateTime<Utc> {
+    DateTime::<Utc>::from_str(date).unwrap()
+}
 
-        let game_seconds_passed =
-            seconds_passed as f32 * self.game_speed;
+impl GameStartDate {
+    fn get_game_from_real(self: Self, date: DateTime<Utc>) -> DateTime<Utc> {
+        let real_seconds = (date - self.real).num_seconds() as u32;
 
-        let dur = Duration::seconds(game_seconds_passed as i64);
+        let game_duration =
+            Duration::seconds((real_seconds as f32 * self.speed) as i64);
 
-        self.game_start + dur
+        self.game + game_duration
     }
 }
 
 #[test]
-fn calculates_game_date_from_real_date() {
-    let gd = GameDate {
-        real_start: DateTime::<Utc>::from_str("2020-01-01 00:00:00+00:00").unwrap(),
-        game_start: DateTime::<Utc>::from_str("1900-01-01 00:00:00+00:00").unwrap(),
-        game_speed: 4.0,
+fn has_real_date_of_game_start() {
+    let game_start = GameStartDate {
+        real: utc_from_str("2020-02-02 00:00:00Z"),
+        game: utc_from_str("2020-02-01 00:00:00Z"),
+        speed: 4.0,
     };
 
     assert_eq!(
-        gd.get_game_date(DateTime::<Utc>::from_str("2020-01-01 01:00:00+00:00").unwrap()),
-        DateTime::<Utc>::from_str("1900-01-01 04:00:00+00:00").unwrap()
+        game_start.real,
+        DateTime::<Utc>::from_str("2020-02-02 00:00:00Z")
+            .unwrap()
+    );
+}
+
+#[test]
+fn has_game_date_of_game_start() {
+    let game_start = GameStartDate {
+        real: utc_from_str("2020-02-01 00:00:00Z"),
+        game: utc_from_str("1920-02-02 00:00:00Z"),
+        speed: 4.0,
+    };
+
+    assert_eq!(
+        game_start.game,
+        DateTime::<Utc>::from_str("1920-02-02 00:00:00Z")
+            .unwrap()
+    );
+}
+
+#[test]
+fn has_game_time_progression_speed() {
+    let game_start = GameStartDate {
+        real: utc_from_str("2020-02-01 00:00:00Z"),
+        game: utc_from_str("1920-02-02 00:00:00Z"),
+        speed: 4.0,
+    };
+
+    assert_eq!(game_start.speed, 4.0);
+}
+
+#[test]
+fn gets_current_game_date() {
+}
+
+#[test]
+fn gets_game_date_from_real_date() {
+    let game_start = GameStartDate {
+        real: utc_from_str("2020-01-01 00:00:00Z"),
+        game: utc_from_str("1920-01-01 00:00:00Z"),
+        speed: 4.0,
+    };
+
+    let current_date =
+        utc_from_str("2020-01-02 00:00:00Z");
+
+    assert_eq!(
+        game_start.get_game_from_real(current_date),
+        utc_from_str("1920-01-05 00:00:00Z")
     );
 }
