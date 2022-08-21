@@ -1,16 +1,13 @@
-#![allow(unused_imports)]
-#![allow(dead_code)]
-#![allow(unused_variables)]
 use chrono::{DateTime, Utc, Duration};
 use std::str::FromStr;
 
-struct GameStartDate {
+pub struct GameStartDate {
     // real date of game start
-    real: DateTime<Utc>,
+    pub real: DateTime<Utc>,
 
     // game date of game start
-    game: DateTime<Utc>,
-    speed: f32,
+    pub game: DateTime<Utc>,
+    pub speed: f32,
 }
 
 pub fn utc_from_str(date: &str) -> DateTime<Utc> {

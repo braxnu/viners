@@ -8,7 +8,7 @@ pub struct Plant<'a> {
     pub seed: &'a Product,
     pub product: &'a Product,
 
-    // days
+    // game time
     pub lifespan: Duration,
 }
 
